@@ -1,0 +1,10 @@
+@font-face {
+    font-family: FiraCode;
+    src: url(./src/assets/fonts/FiraCode-VariableFont_wght.ttf);
+}
+
+#root {
+    height: 100%;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+}

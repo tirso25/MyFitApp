@@ -1,0 +1,19 @@
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+::-webkit-scrollbar-track {
+    background: #121212;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #650b8f;
+    border-radius: 20px;
+    border: 3px solid #121212;
+}
+
+:root {
+    --cursor-size: 18px;
+    --cursor-border: 2px;
+    --cursor-color: rgba(121, 49, 255, 0.8);
+}

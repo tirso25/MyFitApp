@@ -8,7 +8,7 @@ import '../index.css';
 function App() {
     return (
         <main>
-            <CheckCode />
+            <Login />
         </main>
     );
 }

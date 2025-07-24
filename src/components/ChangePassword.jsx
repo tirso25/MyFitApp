@@ -220,7 +220,7 @@ export default function ChangePassword() {
             repeatPassword: repeatPasswordRef.current.value,
         };
 
-        fetch("http://127.0.0.1:8000/api/users/changePassword", {
+        fetch("https://myfitapp.onrender.com/api/users/changePassword", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)

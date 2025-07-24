@@ -11,7 +11,7 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|[a-zA-Z0-9.-]+\.es)$/;
 const usernameRegex = /^[a-z0-9]{5,20}$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{5,255}$/;
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://myfitapp.onrender.com';
 
 export default function Login() {
     const formRef = useRef(null);
@@ -64,12 +64,10 @@ export default function Login() {
             return false;
         }
 
-        // Si contiene @, validar como email
         if (trimmedValue.includes('@')) {
             return emailRegex.test(trimmedValue);
         }
 
-        // Si no contiene @, validar como username
         return usernameRegex.test(trimmedValue);
     };
 
@@ -169,7 +167,6 @@ export default function Login() {
     const validateInput = (event) => {
         const target = event.target;
 
-        // Validar email/username
         const isEmailValid = validateEmailOrUsername(emailRef.current.value);
         if (target === emailRef.current) {
             emailRuleRef.current.style.color = isEmailValid ? "green" : "#ff3c00";
@@ -178,7 +175,6 @@ export default function Login() {
             emailRuleRef.current.classList.add("animate__animated", isEmailValid ? "custom-pulse" : "animate__headShake");
         }
 
-        // Validar contraseña
         const isPasswordValid = passwordRegex.test(passwordRef.current.value.trim());
         if (target === passwordRef.current) {
             pwdRuleRef.current.style.color = isPasswordValid ? "green" : "#ff3c00";
@@ -187,7 +183,6 @@ export default function Login() {
             pwdRuleRef.current.classList.add("animate__animated", isPasswordValid ? "custom-pulse" : "animate__headShake");
         }
 
-        // Actualizar el estado del botón
         const newAllRight = isEmailValid && isPasswordValid;
         setAllRight(newAllRight);
 
@@ -222,7 +217,7 @@ export default function Login() {
             rememberme: rememberMeRef.current.checked,
         };
 
-        fetch("http://127.0.0.1:8000/api/users/signIn", {
+        fetch("https://myfitapp.onrender.com/api/users/signIn", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
@@ -310,14 +305,12 @@ export default function Login() {
     const handleGoogleLogin = (e) => {
         e.preventDefault();
 
-        // Mostrar estado de carga
         googleButtonRef.current.disabled = true;
         googleButtonRef.current.innerHTML = `
             <div class="loading-spinner"></div>
             Connecting...
         `;
 
-        // Redirigir a Google OAuth
         window.location.href = `${API_BASE_URL}/api/connect/google`;
     };
 
@@ -325,7 +318,6 @@ export default function Login() {
         const currentPath = window.location.pathname;
         const urlParams = new URLSearchParams(window.location.search);
 
-        // Verificar si estamos en la página de éxito
         if (currentPath.includes('/auth/success')) {
             const type = urlParams.get('type');
             const message = urlParams.get('message');
@@ -338,7 +330,6 @@ export default function Login() {
             }
         }
 
-        // Verificar si estamos en la página de error
         if (currentPath.includes('/auth/error')) {
             const message = urlParams.get('message');
 
@@ -455,7 +446,7 @@ export default function Login() {
                                 <label htmlFor="rememberme">Remember Me</label>
                             </div>
                             <a
-                                href="http://localhost:63341/MyFitApp/FRONT/TEST/sendEmail.html?type=changePassword"
+                                href="https://myfitappp.vercel.app/sendEmail.html?type=changePassword"
                                 className="forgot-password"
                                 id="forgotPasswordLink"
                             >
@@ -465,7 +456,7 @@ export default function Login() {
                     </div>
                     <div id="content2">
                         <a
-                            href="signIn.html"
+                            href="https://myfitappp.vercel.app/signIn.html"
                             className="button"
                             style={{ backgroundColor: "#2563eb" }}
                         >
@@ -489,7 +480,7 @@ export default function Login() {
                             onClick={handleGoogleLogin}
                         >
                             <img
-                                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                                src="../assets/img/google-icon.svg"
                                 alt="Google icon"
                             />
                             Sign in with Google

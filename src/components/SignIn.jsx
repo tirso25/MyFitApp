@@ -12,7 +12,7 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|[a-zA-Z0-9.-]+\.es)$/;
 const usernameRegex = /^[a-z0-9]{5,20}$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{5,255}$/;
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://myfitapp.onrender.com';
 
 export default function SignIn() {
     const formRef = useRef(null);
@@ -161,7 +161,6 @@ export default function SignIn() {
     const validateInput = (event) => {
         const target = event.target;
 
-        // Validar email
         const isEmailValid = emailRegex.test(emailRef.current.value.trim());
         if (target === emailRef.current) {
             emailRuleRef.current.style.color = isEmailValid ? "green" : "#ff3c00";
@@ -170,7 +169,6 @@ export default function SignIn() {
             emailRuleRef.current.classList.add("animate__animated", isEmailValid ? "custom-pulse" : "animate__headShake");
         }
 
-        // Validar username
         const isUsernameValid = usernameRegex.test(usernameRef.current.value.trim());
         if (target === usernameRef.current) {
             usernameRuleRef.current.style.color = isUsernameValid ? "green" : "#ff3c00";
@@ -179,7 +177,6 @@ export default function SignIn() {
             usernameRuleRef.current.classList.add("animate__animated", isUsernameValid ? "custom-pulse" : "animate__headShake");
         }
 
-        // Validar contraseña
         const isPasswordValid = passwordRegex.test(passwordRef.current.value.trim());
         if (target === passwordRef.current) {
             pwdRuleRef.current.style.color = isPasswordValid ? "green" : "#ff3c00";
@@ -188,7 +185,6 @@ export default function SignIn() {
             pwdRuleRef.current.classList.add("animate__animated", isPasswordValid ? "custom-pulse" : "animate__headShake");
         }
 
-        // Validar repetir contraseña
         const isRepeatPasswordValid = passwordRegex.test(repeatPasswordRef.current.value.trim()) &&
             repeatPasswordRef.current.value.trim() === passwordRef.current.value.trim();
         if (target === repeatPasswordRef.current) {
@@ -198,7 +194,6 @@ export default function SignIn() {
             repeatPwdRuleRef.current.classList.add("animate__animated", isRepeatPasswordValid ? "custom-pulse" : "animate__headShake");
         }
 
-        // Actualizar el estado del botón
         const newAllRight = isEmailValid && isUsernameValid && isPasswordValid && isRepeatPasswordValid;
         setAllRight(newAllRight);
 
@@ -247,7 +242,7 @@ export default function SignIn() {
             repeatPassword: repeatPasswordRef.current.value,
         };
 
-        fetch("http://127.0.0.1:8000/api/users/signUp", {
+        fetch("https://myfitapp.onrender.com/api/users/signUp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
@@ -544,7 +539,7 @@ export default function SignIn() {
                     </div>
                     <div id="content2">
                         <a
-                            href="login.html"
+                            href="https://myfitappp.vercel.app/login.html"
                             className="button"
                             style={{ backgroundColor: "#2563eb" }}
                         >
@@ -569,7 +564,7 @@ export default function SignIn() {
                             onClick={handleGoogleLogin}
                         >
                             <img
-                                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                                src="../assets/img/google-icon.svg"
                                 alt="Google icon"
                             />
                             Sign in with Google

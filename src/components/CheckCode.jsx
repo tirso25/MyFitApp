@@ -23,7 +23,6 @@ export default function CheckCode() {
     useTTS(speakBtnRef, rulesContainerRef);
 
     useEffect(() => {
-        // Cargar el código desde URL params al montar el componente
         const params = new URLSearchParams(window.location.search);
         const checkCodeParam = params.get("checkCode");
         if (checkCodeParam && checkCodeRef.current) {
@@ -35,7 +34,6 @@ export default function CheckCode() {
     const validateInput = (event) => {
         const target = event.target;
 
-        // Validar código
         const isCodeValid = checkCodeRef.current.value.trim() !== "" &&
             codeRegex.test(checkCodeRef.current.value.trim());
 
@@ -46,7 +44,6 @@ export default function CheckCode() {
             codeRuleRef.current.classList.add("animate__animated", isCodeValid ? "custom-pulse" : "animate__headShake");
         }
 
-        // Actualizar el estado del botón
         const newAllRight = isCodeValid;
         setAllRight(newAllRight);
 
@@ -79,7 +76,7 @@ export default function CheckCode() {
             verificationCode: checkCodeRef.current.value
         };
 
-        fetch("http://127.0.0.1:8000/api/users/checkCode", {
+        fetch("https://myfitapp.onrender.com/api/users/checkCode", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)

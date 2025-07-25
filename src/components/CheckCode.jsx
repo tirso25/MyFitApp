@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import confetti from "canvas-confetti";
 import { Notyf } from "notyf";
 import useTTS from "../hooks/useTTS.js";
@@ -8,6 +9,8 @@ import "../styles/general.css";
 import "../styles/checkCode.css";
 
 const codeRegex = /^[0-9]{6}$/;
+const navigate = useNavigate();
+const API_BASE_URL = 'https://myfitapp.onrender.com';
 
 export default function CheckCode() {
     const formRef = useRef(null);
@@ -76,7 +79,7 @@ export default function CheckCode() {
             verificationCode: checkCodeRef.current.value
         };
 
-        fetch("https://myfitapp.onrender.com/api/users/checkCode", {
+        fetch(`${API_BASE_URL}/api/users/checkCode`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)

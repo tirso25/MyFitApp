@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import confetti from "canvas-confetti";
 import { Notyf } from "notyf";
 import CryptoJS from "crypto-js";
@@ -11,7 +12,7 @@ import "../styles/signIn.css";
 const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|[a-zA-Z0-9.-]+\.es)$/;
 const usernameRegex = /^[a-z0-9]{5,20}$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{5,255}$/;
-
+const navigate = useNavigate();
 const API_BASE_URL = 'https://myfitapp.onrender.com';
 
 export default function SignIn() {
@@ -242,7 +243,7 @@ export default function SignIn() {
             repeatPassword: repeatPasswordRef.current.value,
         };
 
-        fetch("https://myfitapp.onrender.com/api/users/signUp", {
+        fetch(`${API_BASE_URL}/api/users/signUp`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
@@ -281,8 +282,14 @@ export default function SignIn() {
                     const urlSafeData = encodeForURL(encrypted);
                     const urlSafeKey = encodeForURL(randomKey);
 
-                    window.location.href = `./sendEmail.html?email=${urlSafeData}&key=${urlSafeKey}&type=activateAccount`;
-                }, 1700);
+                    navigate('/CheckEmail', {
+                        state: {
+                            email: urlSafeData,
+                            key: urlSafeKey,
+                            type: 'activateAccount',
+                        }
+                    });
+                }, 2000);
             })
             .catch(error => {
                 console.error("Error:", error);
@@ -370,7 +377,13 @@ export default function SignIn() {
                     const urlSafeData = encodeForURL(encrypted);
                     const urlSafeKey = encodeForURL(randomKey);
 
-                    window.location.href = `./sendEmail.html?email=${urlSafeData}&key=${urlSafeKey}&type=changePassword`;
+                    navigate('/CheckEmail', {
+                        state: {
+                            email: urlSafeData,
+                            key: urlSafeKey,
+                            type: 'changePassword',
+                        }
+                    });
                 }, 1700);
             }
         }
@@ -539,7 +552,7 @@ export default function SignIn() {
                     </div>
                     <div id="content2">
                         <a
-                            href="https://myfitappp.vercel.app/login.html"
+                            href="/logIn"
                             className="button"
                             style={{ backgroundColor: "#2563eb" }}
                         >
@@ -564,7 +577,7 @@ export default function SignIn() {
                             onClick={handleGoogleLogin}
                         >
                             <img
-                                src="../assets/img/google-icon.svg"
+                                src="/img/google-icon.svg"
                                 alt="Google icon"
                             />
                             Sign in with Google

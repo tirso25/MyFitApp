@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import confetti from "canvas-confetti";
 import { Notyf } from "notyf";
 import useTTS from "../hooks/useTTS.js";
@@ -9,6 +10,8 @@ import "../styles/signIn.css";
 
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{5,255}$/;
 const codeRegex = /^[0-9]{6}$/;
+const navigate = useNavigate();
+const API_BASE_URL = 'https://myfitapp.onrender.com';
 
 export default function ChangePassword() {
     const formRef = useRef(null);
@@ -220,7 +223,7 @@ export default function ChangePassword() {
             repeatPassword: repeatPasswordRef.current.value,
         };
 
-        fetch("https://myfitapp.onrender.com/api/users/changePassword", {
+        fetch(`${API_BASE_URL}/api/users/changePassword`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)

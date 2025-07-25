@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import CryptoJS from "crypto-js";
 import confetti from "canvas-confetti";
 import { Notyf } from "notyf";
@@ -9,6 +10,8 @@ import "../styles/general.css";
 import "../styles/checkCode.css";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|[a-zA-Z0-9.-]+\.es)$/;
+const navigate = useNavigate();
+const API_BASE_URL = 'https://myfitapp.onrender.com';
 
 export default function CheckEmail() {
     const formRef = useRef(null);
@@ -111,7 +114,7 @@ export default function CheckEmail() {
             type: typeURL,
         };
 
-        fetch("https://myfitapp.onrender.com/api/users/sendEmail", {
+        fetch(`${API_BASE_URL}/api/users/sendEmail`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),

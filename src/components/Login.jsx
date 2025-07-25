@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import confetti from "canvas-confetti";
 import { Notyf } from "notyf";
 import useTTS from "../hooks/useTTS.js";
@@ -10,7 +11,7 @@ import "../styles/login.css";
 const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|[a-zA-Z0-9.-]+\.es)$/;
 const usernameRegex = /^[a-z0-9]{5,20}$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{5,255}$/;
-
+const navigate = useNavigate();
 const API_BASE_URL = 'https://myfitapp.onrender.com';
 
 export default function Login() {
@@ -217,7 +218,7 @@ export default function Login() {
             rememberme: rememberMeRef.current.checked,
         };
 
-        fetch("https://myfitapp.onrender.com/api/users/signIn", {
+        fetch(`${API_BASE_URL}/api/users/signIn`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
@@ -456,7 +457,7 @@ export default function Login() {
                     </div>
                     <div id="content2">
                         <a
-                            href="https://myfitappp.vercel.app/signIn.html"
+                            href="/signIn"
                             className="button"
                             style={{ backgroundColor: "#2563eb" }}
                         >
@@ -480,7 +481,7 @@ export default function Login() {
                             onClick={handleGoogleLogin}
                         >
                             <img
-                                src="../assets/img/google-icon.svg"
+                                src="/img/google-icon.svg"
                                 alt="Google icon"
                             />
                             Sign in with Google

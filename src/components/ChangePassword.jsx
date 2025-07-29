@@ -255,6 +255,9 @@ export default function ChangePassword() {
                     dismissible: true,
                     position: { x: 'right', y: 'top' },
                 });
+                setTimeout(() => {
+                    navigate('/login');
+                }, 2000);
             })
             .catch(error => {
                 console.error("Error:", error);

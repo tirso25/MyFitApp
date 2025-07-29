@@ -14,7 +14,7 @@ const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{5
 const API_BASE_URL = 'https://myfitapp.onrender.com';
 
 export default function Login() {
-    const navigate = useNavigate();
+    const navigate = useNavigate();3
     const formRef = useRef(null);
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
@@ -250,6 +250,10 @@ export default function Login() {
                     dismissible: true,
                     position: { x: 'right', y: 'top' },
                 });
+
+                setTimeout(() => {
+                    navigate('/checkCode');
+                }, 2000);
             })
             .catch(error => {
                 console.error("Error:", error);

@@ -145,6 +145,7 @@ export default function CheckEmail() {
                     dismissible: true,
                     position: { x: "right", y: "top" },
                 });
+
             })
             .catch((err) => {
                 console.error("Error:", err);

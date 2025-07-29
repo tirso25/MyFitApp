@@ -10,10 +10,10 @@ import "../styles/signIn.css";
 
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{5,255}$/;
 const codeRegex = /^[0-9]{6}$/;
-const navigate = useNavigate();
 const API_BASE_URL = 'https://myfitapp.onrender.com';
 
 export default function ChangePassword() {
+    const navigate = useNavigate();
     const formRef = useRef(null);
     const checkCodeRef = useRef(null);
     const passwordRef = useRef(null);

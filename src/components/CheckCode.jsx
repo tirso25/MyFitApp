@@ -9,10 +9,10 @@ import "../styles/general.css";
 import "../styles/checkCode.css";
 
 const codeRegex = /^[0-9]{6}$/;
-const navigate = useNavigate();
 const API_BASE_URL = 'https://myfitapp.onrender.com';
 
 export default function CheckCode() {
+    const navigate = useNavigate();
     const formRef = useRef(null);
     const checkCodeRef = useRef(null);
     const sendCodeButtonRef = useRef(null);

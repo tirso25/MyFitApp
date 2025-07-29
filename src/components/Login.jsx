@@ -11,10 +11,10 @@ import "../styles/login.css";
 const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|[a-zA-Z0-9.-]+\.es)$/;
 const usernameRegex = /^[a-z0-9]{5,20}$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{5,255}$/;
-const navigate = useNavigate();
 const API_BASE_URL = 'https://myfitapp.onrender.com';
 
 export default function Login() {
+    const navigate = useNavigate();
     const formRef = useRef(null);
     const emailRef = useRef(null);
     const passwordRef = useRef(null);

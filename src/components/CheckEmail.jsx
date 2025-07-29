@@ -10,10 +10,10 @@ import "../styles/general.css";
 import "../styles/checkCode.css";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|[a-zA-Z0-9.-]+\.es)$/;
-const navigate = useNavigate();
 const API_BASE_URL = 'https://myfitapp.onrender.com';
 
 export default function CheckEmail() {
+    const navigate = useNavigate();
     const formRef = useRef(null);
     const emailRef = useRef(null);
     const emailRuleRef = useRef(null);

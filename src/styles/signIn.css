@@ -204,7 +204,7 @@ a.button:hover {
 @media (max-width: 500px) {
     body {
         justify-content: flex-start;
-        padding-top: 80px;
+        padding-top: 95px;
     }
 
     #content2 {

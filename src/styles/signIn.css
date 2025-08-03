@@ -420,3 +420,32 @@ fieldset {
         transform: translateY(-3px) scale(1.02);
     }
 }
+
+.signin-btn,
+form button[type="submit"] {
+    min-width: 180px;
+    min-height: 44px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    padding: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.signin-btn.loading,
+form button[type="submit"].loading {
+    min-width: 180px;
+    min-height: 44px;
+}
+
+@media (max-width: 500px) {
+    .signin-btn,
+    form button[type="submit"] {
+        width: 100% !important;
+        min-width: 100% !important;
+        min-height: 44px;
+        margin-bottom: 10px;
+    }
+}

@@ -72,52 +72,64 @@ export default function CheckCode() {
         }
     };
 
-    const checkCodee = () => {
+    const checkCodee = async () => {
         sendCodeButtonRef.current.classList.remove('bounce-animation');
 
-        const data = {
-            verificationCode: checkCodeRef.current.value
-        };
+        try {
+            const data = {
+                verificationCode: checkCodeRef.current.value
+            };
 
-        fetch(`${API_BASE_URL}/api/users/checkCode`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        })
-            .then(response => {
-                if (!response.ok) {
+            const response = await fetch(`${API_BASE_URL}/api/users/checkCode`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            const message = await response.json();
+
+            if (!response.ok) {
+                if (formRef.current) {
                     formRef.current.classList.add('shake');
-                    setTimeout(() => formRef.current.classList.remove('shake'), 400);
-
-                    return response.json().then(message => {
-                        const notyf = new Notyf();
-                        notyf.error({
-                            message: message.message,
-                            duration: 4000,
-                            dismissible: true,
-                            position: { x: 'right', y: 'top' },
-                        });
-                    });
+                    setTimeout(() => formRef.current?.classList.remove('shake'), 400);
                 }
 
-                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-                return response.json();
-            })
-            .then((message) => {
                 const notyf = new Notyf();
-                notyf.success({
+                notyf.error({
                     message: message.message,
-                    duration: 2000,
+                    duration: 4000,
                     dismissible: true,
                     position: { x: 'right', y: 'top' },
                 });
-                setTimeout(() => {
-                    navigate('/login');
-                }, 2000);
-            })
-            .catch(error => {
-                console.error("Error:", error);
+
+                return;
+            }
+
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+
+            const notyf = new Notyf();
+            notyf.success({
+                message: message.message,
+                duration: 2000,
+                dismissible: true,
+                position: { x: 'right', y: 'top' },
             });
+
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
+
+        } catch (error) {
+            console.error("Error:", error);
+
+            const notyf = new Notyf();
+            notyf.error({
+                message: "A network error has occurred.",
+                duration: 4000,
+                dismissible: true,
+                position: { x: 'right', y: 'top' },
+            });
+        }
     };
 
     const handleSubmit = (e) => {

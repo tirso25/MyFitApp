@@ -9,6 +9,8 @@ body {
     font-family: 'Poppins', sans-serif;
     color: #ffffff;
     padding: 20px;
+    padding-top: max(20px, env(safe-area-inset-top));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
 }
 
 form label {
@@ -113,7 +115,6 @@ a.button:hover {
     margin: 5px 0;
 }
 
-/* Estilos mejorados para los contadores de contraseña */
 .password-counter {
     padding: 8px 12px;
     margin: 8px 0 15px 0;
@@ -146,7 +147,6 @@ a.button:hover {
     border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-/* Animación pulse personalizada más sutil */
 @keyframes custom-pulse {
     0% {
         transform: scale(1);
@@ -203,7 +203,8 @@ a.button:hover {
 
 @media (max-width: 500px) {
     body {
-        padding: 10px;
+        justify-content: flex-start;
+        padding-top: 50px;
     }
 
     #content2 {
@@ -249,6 +250,10 @@ a.button:hover {
         margin: 0 2px;
         padding: 1px 4px;
         font-size: 9px;
+    }
+
+    #rulesF {
+        margin-top: 20px;
     }
 }
 
@@ -311,7 +316,6 @@ fieldset {
     margin-right: 0;
 }
 
-/* TTS Button Styles */
 .tts-btn {
     background: none;
     border: none;
@@ -352,7 +356,6 @@ fieldset {
     transform: none;
 }
 
-/* Subtle pulse animation for speaking state */
 @keyframes pulse {
     0%, 100% {
         opacity: 1;
@@ -364,18 +367,15 @@ fieldset {
     }
 }
 
-/* Rules highlight during speech */
 .rules-speaking {
     animation: subtle-highlight 3s infinite;
 }
 
-/* Material icon adjustments */
 .tts-btn .material-symbols-outlined {
     font-size: 18px;
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 18;
 }
 
-/* Responsive adjustments */
 @media (max-width: 500px) {
     .rules-container {
         gap: 4px;

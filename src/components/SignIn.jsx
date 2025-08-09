@@ -9,7 +9,7 @@ import 'animate.css';
 import "../styles/general.css";
 import "../styles/signIn.css";
 
-const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|[a-zA-Z0-9.-]+\.es)$/;
+const emailRegex = /^(?=.{9,255}$)[a-zA-Z0-9._%+-]+@(gmail|yahoo|outlook|hotmail)\.(com|es)$/;
 const usernameRegex = /^[a-z0-9]{5,20}$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{5,255}$/;
 const API_BASE_URL = 'https://myfitapp.onrender.com';
@@ -161,8 +161,8 @@ export default function SignIn() {
 
             let x = 10;
             let y = 10;
-            let dx = 0.6;
-            let dy = 0.6;
+            let dx = 0.3;
+            let dy = 0.3;
             const logoWidth = 30;
             const logoHeight = 15;
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8000', '#8000ff'];
@@ -637,16 +637,16 @@ export default function SignIn() {
 
     const validateData = (data) => {
         if (!data.email || !data.username || !data.password || !data.repeatPassword) {
-            showErrorMessage('All fields are required');
+            showErrorMessage('Invalid data');
             return false;
         }
 
-        if (!emailRegex.test(data.email) || data.email.length > 255) {
+        if (!emailRegex.test(data.email)) {
             showErrorMessage('Invalid email format');
             return false;
         }
 
-        if (!usernameRegex.test(data.username) || data.username.length > 20) {
+        if (!usernameRegex.test(data.username)) {
             showErrorMessage('Invalid username format');
             return false;
         }
@@ -656,7 +656,7 @@ export default function SignIn() {
             return false;
         }
 
-        if (!passwordRegex.test(data.password) || data.password.length > 255) {
+        if (!passwordRegex.test(data.password) || !passwordRegex.test(data.repeatPassword)) {
             showErrorMessage('Invalid password format');
             return false;
         }
@@ -892,7 +892,7 @@ export default function SignIn() {
                             name="email"
                             placeholder="email@gmail.com"
                             required
-                            minLength="5"
+                            minLength="9"
                             maxLength="255"
                             autoComplete="email"
                             ref={emailRef}

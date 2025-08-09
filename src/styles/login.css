@@ -114,7 +114,6 @@ a.button:hover {
     margin: 5px 0;
 }
 
-/* === SECCIÓN REESTRUCTURADA: MANTENER SESIÓN Y OLVIDASTE CONTRASEÑA === */
 .options-container {
     display: flex;
     justify-content: space-between;
@@ -125,7 +124,6 @@ a.button:hover {
     flex-wrap: wrap;
 }
 
-/* Checkbox animado personalizado */
 .checkbox-container {
     display: flex;
     align-items: center;
@@ -140,12 +138,10 @@ a.button:hover {
     color: #ffffff;
 }
 
-/* Ocultar el checkbox original */
 .checkbox-container input[type="checkbox"] {
     display: none;
 }
 
-/* Checkbox personalizado */
 .cbx {
     position: relative;
     width: 17px;
@@ -174,7 +170,6 @@ a.button:hover {
     transition-delay: 0.15s;
 }
 
-/* Estado checked */
 .checkbox-container input[type="checkbox"]:checked + .cbx {
     border-color: transparent;
     background: #6871f1;
@@ -186,7 +181,6 @@ a.button:hover {
     transform: rotate(45deg) scale(1);
 }
 
-/* Animación jelly */
 @keyframes jelly {
     from {
         transform: scale(1, 1);
@@ -219,7 +213,6 @@ a.button:hover {
     margin-left: 5px;
 }
 
-/* Efecto hover en el checkbox */
 .checkbox-container:hover .cbx {
     border-color: #6871f1;
     transform: scale(1.05);
@@ -254,9 +247,7 @@ a.button:hover {
 .forgot-password:hover::after {
     width: 100%;
 }
-/* === FIN SECCIÓN REESTRUCTURADA === */
 
-/* Animaciones pulse */
 @keyframes custom-pulse {
     0% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.05); opacity: 0.8; }
@@ -287,7 +278,6 @@ a.button:hover {
     animation: custom-pulse-opacity 0.6s ease-in-out;
 }
 
-/* Shake error */
 @keyframes shake {
     0% { transform: translateX(0); }
     25% { transform: translateX(-10px); }
@@ -300,7 +290,6 @@ a.button:hover {
     animation: shake 0.4s ease-in-out;
 }
 
-/* Google login */
 .google-login {
     margin-top: 15px;
     text-align: center;
@@ -334,7 +323,6 @@ a.button:hover {
     height: 20px;
 }
 
-/* Responsive */
 @media (max-width: 500px) {
     #content2 {
         flex-direction: column;
@@ -375,7 +363,6 @@ a.button:hover {
     }
 }
 
-/* Box sizing */
 * {
     box-sizing: border-box;
 }
@@ -385,7 +372,6 @@ fieldset {
     max-width: 400px;
 }
 
-/* Estilos mejorados para los contadores de contraseña */
 .password-counter {
     padding: 8px 12px;
     margin: 8px 0 15px 0;
@@ -418,7 +404,6 @@ fieldset {
     border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-/* Rules container with TTS button */
 .rules-container {
     display: flex;
     align-items: flex-start;
@@ -431,7 +416,6 @@ fieldset {
     margin-right: 0;
 }
 
-/* TTS Button Styles */
 .tts-btn {
     background: none;
     border: none;
@@ -472,7 +456,6 @@ fieldset {
     transform: none;
 }
 
-/* Subtle pulse animation for speaking state */
 @keyframes pulse {
     0%, 100% {
         opacity: 1;
@@ -484,18 +467,16 @@ fieldset {
     }
 }
 
-/* Rules highlight during speech */
+
 .rules-speaking {
     animation: subtle-highlight 3s infinite;
 }
 
-/* Material icon adjustments */
 .tts-btn .material-symbols-outlined {
     font-size: 18px;
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 18;
 }
 
-/* Responsive adjustments */
 @media (max-width: 500px) {
     .rules-container {
         gap: 4px;
@@ -523,5 +504,34 @@ fieldset {
     }
     50% {
         transform: translateY(-3px) scale(1.02);
+    }
+}
+
+.login-btn,
+form button[type="submit"] {
+    min-width: 180px;
+    min-height: 44px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    padding: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-btn.loading,
+form button[type="submit"].loading {
+    min-width: 180px;
+    min-height: 44px;
+}
+
+@media (max-width: 500px) {
+    .login-btn,
+    form button[type="submit"] {
+        width: 100% !important;
+        min-width: 100% !important;
+        min-height: 44px;
+        margin-bottom: 10px;
     }
 }

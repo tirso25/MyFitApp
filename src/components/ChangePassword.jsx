@@ -631,8 +631,6 @@ export default function ChangePassword() {
     };
 
     const changePassword = async () => {
-        setStatus('loading');
-
         try {
             const data = {
                 verificationCode: checkCodeRef.current.value,
@@ -644,6 +642,8 @@ export default function ChangePassword() {
                 setStatus('idle');
                 return;
             }
+
+            setStatus('loading');
 
             const response = await fetch(`${API_BASE_URL}/api/users/changePassword`, {
                 method: "PUT",

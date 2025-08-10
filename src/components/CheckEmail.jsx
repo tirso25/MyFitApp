@@ -513,8 +513,6 @@ export default function CheckEmail() {
     };
 
     const sendEmail = async () => {
-        setStatus('loading');
-
         try {
             const data = {
                 email: emailRef.current.value,
@@ -524,6 +522,8 @@ export default function CheckEmail() {
             if(!validateData(data)) {
                 return;
             }
+
+            setStatus('loading');
 
             const response = await fetch(`${API_BASE_URL}/api/users/sendEmail`, {
                 method: "POST",

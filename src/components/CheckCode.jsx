@@ -452,8 +452,6 @@ export default function CheckCode() {
     };
 
     const checkCodee = async () => {
-        setStatus('loading');
-
         try {
             const data = {
                 verificationCode: checkCodeRef.current.value
@@ -462,6 +460,8 @@ export default function CheckCode() {
             if(!validateData(data)){
                 return;
             }
+
+            setStatus('loading');
 
             const response = await fetch(`${API_BASE_URL}/api/users/checkCode`, {
                 method: "POST",

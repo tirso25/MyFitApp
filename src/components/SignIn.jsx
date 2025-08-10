@@ -687,8 +687,6 @@ export default function SignIn() {
     };
 
     const signin = async () => {
-        setStatus('loading');
-
         try {
             const data = {
                 email: emailRef.current.value,
@@ -700,6 +698,8 @@ export default function SignIn() {
             if (!validateData(data)) {
                 return;
             }
+
+            setStatus('loading');
 
             const response = await fetch(`${API_BASE_URL}/api/users/signUp`, {
                 method: "POST",

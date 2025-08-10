@@ -560,7 +560,7 @@ export default function Login() {
     };
 
     const validateData = (data) =>{
-        if(!data.email || !data.password || !data.rememberme){
+        if(!data.email || !data.password || data.rememberme === undefined){
             showErrorMessage('Invalid data');
             return false;
         }
@@ -593,8 +593,6 @@ export default function Login() {
     };
 
     const login = async () => {
-        setStatus('loading');
-
         try {
             const data = {
                 email: emailRef.current.value,
@@ -605,6 +603,8 @@ export default function Login() {
             if(!validateData(data)){
                 return;
             }
+
+            setStatus('loading');
 
             const response = await fetch(`${API_BASE_URL}/api/users/signIn`, {
                 method: "POST",

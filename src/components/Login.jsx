@@ -42,7 +42,6 @@ export default function Login() {
     useEffect(() => {
         initializeCounterStyles();
         initializeButtonStyles();
-        handleAuthCallback();
     }, []);
 
     useEffect(() => {
@@ -405,42 +404,97 @@ export default function Login() {
 
         googleButtonRef.current.disabled = true;
         googleButtonRef.current.innerHTML = `
-            <div class="loading-spinner"></div>
-            Connecting...
-        `;
+        <div class="loading-spinner"></div>
+        Connecting...
+    `;
 
-        window.location.href = `${API_BASE_URL}/api/connect/google`;
+        window.location.href = `${API_BASE_URL}/api/connect/google?source=login`;
     };
 
-    const handleAuthCallback = () => {
-        const currentPath = window.location.pathname;
+// Función para manejar el callback de Google Auth en la página actual
+    const handleGoogleAuthCallback = () => {
         const urlParams = new URLSearchParams(window.location.search);
+        const googleAuth = urlParams.get('google_auth');
+        const token = urlParams.get('token');
+        const message = urlParams.get('message');
+        const rememberToken = urlParams.get('rememberToken');
 
-        if (currentPath.includes('/auth/success')) {
-            const type = urlParams.get('type');
-            const message = urlParams.get('message');
+        if (googleAuth === 'success' && token) {
+            // Login exitoso - guardar JWT
+            localStorage.setItem('jwt_token', token);
 
-            if (type && message) {
-                showSuccessMessage(message);
-                setTimeout(() => {
-                    window.location.href = '/dashboard';
-                }, 2000);
+            // Si hay remember token, ya está en cookies automáticamente
+            if (rememberToken) {
+                console.log('Remember me activated');
             }
+
+            showSuccessMessage(message || 'Login successful');
+
+            // Limpiar URL parameters
+            const url = new URL(window.location);
+            url.searchParams.delete('google_auth');
+            url.searchParams.delete('token');
+            url.searchParams.delete('message');
+            url.searchParams.delete('rememberToken');
+            window.history.replaceState({}, document.title, url);
+
+            // Redirigir al dashboard después de un momento
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 1500);
+
+        } else if (googleAuth === 'error') {
+            showErrorMessage(message || 'Google authentication failed');
+
+            // Reactivar el botón de Google
+            if (googleButtonRef.current) {
+                googleButtonRef.current.disabled = false;
+                googleButtonRef.current.innerHTML = `
+                <img src="/images/google-icon.svg" alt="Google" width="20" height="20">
+                Continue with Google
+            `;
+            }
+
+            // Limpiar URL parameters
+            const url = new URL(window.location);
+            url.searchParams.delete('google_auth');
+            url.searchParams.delete('message');
+            window.history.replaceState({}, document.title, url);
         }
+    };
 
-        if (currentPath.includes('/auth/error')) {
-            const message = urlParams.get('message');
+// Función para verificar remember token al cargar la página
+    const checkRememberToken = async () => {
+        // Solo verificar si no hay JWT en localStorage y no hay parámetros de Google auth
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasGoogleAuth = urlParams.get('google_auth');
 
-            if (message) {
-                showErrorMessage(message);
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 3000);
+        if (!localStorage.getItem('jwt_token') && !hasGoogleAuth) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users/tokenExisting`, {
+                    method: 'POST',
+                    credentials: 'include', // Incluir cookies
+                });
+
+                const data = await response.json();
+
+                if (data.type === 'success' && data.userData) {
+                    showSuccessMessage(data.message);
+
+                    // Redirigir al dashboard
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1500);
+                }
+                // eslint-disable-next-line no-unused-vars
+            } catch (error) {
+                console.log('No remember token found');
             }
         }
     };
 
     const showSuccessMessage = (message) => {
+        console.log('Success:', message);
         const notyf = new Notyf();
         notyf.success({
             message: message,
@@ -451,6 +505,7 @@ export default function Login() {
     };
 
     const showErrorMessage = (message) => {
+        console.error('Error:', message);
         const notyf = new Notyf();
         notyf.error({
             message: message,
@@ -459,6 +514,18 @@ export default function Login() {
             position: { x: 'right', y: 'top' },
         });
     };
+
+// Inicializar cuando carga la página de LOGIN
+    document.addEventListener('DOMContentLoaded', () => {
+        // Manejar callback de Google Auth
+        handleGoogleAuthCallback();
+
+        // Verificar remember token solo si no hay callback de Google
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.get('google_auth')) {
+            checkRememberToken();
+        }
+    });
 
     return (
         <>

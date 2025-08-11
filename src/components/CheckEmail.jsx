@@ -257,9 +257,23 @@ export default function CheckEmail() {
                 position: { x: 'right', y: 'top' },
             });
 
-            setTimeout(() => {
-                navigate('/checkCode');
-            }, 2000);
+            const urlParams = new URLSearchParams(window.location.search);
+            let type = urlParams.get('type');
+
+            switch(type) {
+                case 'activateAccount':
+                    setTimeout(() => {
+                        navigate('/checkCode');
+                    }, 2000);
+                    break;
+                case 'changePassword':
+                    setTimeout(() => {
+                        navigate('/changePassword');
+                    }, 2000);
+                    break;
+            }
+
+
         } catch (error) {
             console.error("Error:", error);
             setStatus('error');

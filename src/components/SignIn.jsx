@@ -523,12 +523,65 @@ export default function SignIn() {
 
         googleButtonRef.current.disabled = true;
         googleButtonRef.current.innerHTML = `
-            <div class="loading-spinner"></div>
-            Connecting...
-        `;
+        <div class="loading-spinner"></div>
+        Connecting...
+    `;
 
-        window.location.href = `${API_BASE_URL}/api/connect/google`;
+        window.location.href = `${API_BASE_URL}/api/connect/google?source=signin`;
     };
+
+    const handleGoogleAuthCallback = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const googleAuth = urlParams.get('google_auth');
+        const token = urlParams.get('token');
+        const message = urlParams.get('message');
+        const rememberToken = urlParams.get('rememberToken');
+
+        if (googleAuth === 'success' && token) {
+            // Login exitoso - guardar JWT
+            localStorage.setItem('jwt_token', token);
+
+            if (rememberToken) {
+                console.log('Remember me activated');
+            }
+
+            showSuccessMessage(message || 'Login successful');
+
+            // Limpiar URL parameters
+            const url = new URL(window.location);
+            url.searchParams.delete('google_auth');
+            url.searchParams.delete('token');
+            url.searchParams.delete('message');
+            url.searchParams.delete('rememberToken');
+            window.history.replaceState({}, document.title, url);
+
+            // Redirigir al dashboard
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 1500);
+
+        } else if (googleAuth === 'error') {
+            showErrorMessage(message || 'Google authentication failed');
+
+            if (googleButtonRef.current) {
+                googleButtonRef.current.disabled = false;
+                googleButtonRef.current.innerHTML = `
+                <img src="/images/google-icon.svg" alt="Google" width="20" height="20">
+                Continue with Google
+            `;
+            }
+
+            // Limpiar URL parameters
+            const url = new URL(window.location);
+            url.searchParams.delete('google_auth');
+            url.searchParams.delete('message');
+            window.history.replaceState({}, document.title, url);
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        handleGoogleAuthCallback();
+    });
 
     const showSuccessMessage = (message) => {
         console.log('Success:', message);

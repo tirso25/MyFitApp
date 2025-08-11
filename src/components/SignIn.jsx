@@ -545,7 +545,9 @@ export default function SignIn() {
                 console.log('Remember me activated');
             }
 
-            showSuccessMessage(message || 'Login successful');
+            // Decodificar el mensaje y mostrar
+            const decodedMessage = message ? decodeURIComponent(message.replace(/\+/g, ' ')) : 'Login successful';
+            showSuccessMessage(decodedMessage);
 
             // Limpiar URL parameters
             const url = new URL(window.location);
@@ -555,19 +557,21 @@ export default function SignIn() {
             url.searchParams.delete('rememberToken');
             window.history.replaceState({}, document.title, url);
 
-            // Redirigir al dashboard
+            // Redirigir al dashboard usando React Router
             setTimeout(() => {
-                window.location.href = '/dashboard';
+                navigate('/dashboard');
             }, 1500);
 
         } else if (googleAuth === 'error') {
-            showErrorMessage(message || 'Google authentication failed');
+            // Decodificar el mensaje de error y quitar los +
+            const errorMessage = message ? decodeURIComponent(message.replace(/\+/g, ' ')) : 'Google authentication failed';
+            showErrorMessage(errorMessage);
 
             if (googleButtonRef.current) {
                 googleButtonRef.current.disabled = false;
                 googleButtonRef.current.innerHTML = `
-                <img src="/images/google-icon.svg" alt="Google" width="20" height="20">
-                Continue with Google
+                <img src="/img/google-icon.svg" alt="Google" width="20" height="20">
+                Sign in with Google
             `;
             }
 
@@ -579,9 +583,12 @@ export default function SignIn() {
         }
     };
 
-    document.addEventListener('DOMContentLoaded', () => {
+    useEffect(() => {
+        console.log('SignIn component mounted, checking auth...');
+
+        // Manejar callback de Google Auth
         handleGoogleAuthCallback();
-    });
+    }, []);
 
     const showSuccessMessage = (message) => {
         console.log('Success:', message);

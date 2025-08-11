@@ -411,10 +411,10 @@ export default function Login() {
         window.location.href = `${API_BASE_URL}/api/connect/google?source=login`;
     };
 
-// Función para manejar el callback de Google Auth en la página actual
     const handleGoogleAuthCallback = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const googleAuth = urlParams.get('google_auth');
+        console.log('Google auth status:', googleAuth);
         const token = urlParams.get('token');
         const message = urlParams.get('message');
         const rememberToken = urlParams.get('rememberToken');
@@ -428,7 +428,9 @@ export default function Login() {
                 console.log('Remember me activated');
             }
 
-            showSuccessMessage(message || 'Login successful');
+            // Decodificar el mensaje y mostrar
+            const decodedMessage = message ? decodeURIComponent(message.replace(/\+/g, ' ')) : 'Login successful';
+            showSuccessMessage(decodedMessage);
 
             // Limpiar URL parameters
             const url = new URL(window.location);
@@ -440,18 +442,20 @@ export default function Login() {
 
             // Redirigir al dashboard después de un momento
             setTimeout(() => {
-                window.location.href = '/dashboard';
+                navigate('/dashboard'); // Usar navigate de React Router en lugar de window.location.href
             }, 1500);
 
         } else if (googleAuth === 'error') {
-            showErrorMessage(message || 'Google authentication failed');
+            // Decodificar el mensaje de error y quitar los +
+            const errorMessage = message ? decodeURIComponent(message.replace(/\+/g, ' ')) : 'Google authentication failed';
+            showErrorMessage(errorMessage);
 
             // Reactivar el botón de Google
             if (googleButtonRef.current) {
                 googleButtonRef.current.disabled = false;
                 googleButtonRef.current.innerHTML = `
-                <img src="/images/google-icon.svg" alt="Google" width="20" height="20">
-                Continue with Google
+                <img src="/img/google-icon.svg" alt="Google" width="20" height="20">
+                Log in with Google
             `;
             }
 
@@ -463,7 +467,6 @@ export default function Login() {
         }
     };
 
-// Función para verificar remember token al cargar la página
     const checkRememberToken = async () => {
         // Solo verificar si no hay JWT en localStorage y no hay parámetros de Google auth
         const urlParams = new URLSearchParams(window.location.search);
@@ -481,12 +484,11 @@ export default function Login() {
                 if (data.type === 'success' && data.userData) {
                     showSuccessMessage(data.message);
 
-                    // Redirigir al dashboard
+                    // Redirigir al dashboard usando React Router
                     setTimeout(() => {
-                        window.location.href = '/dashboard';
+                        navigate('/dashboard');
                     }, 1500);
                 }
-                // eslint-disable-next-line no-unused-vars
             } catch (error) {
                 console.log('No remember token found');
             }
@@ -515,8 +517,10 @@ export default function Login() {
         });
     };
 
-// Inicializar cuando carga la página de LOGIN
-    document.addEventListener('DOMContentLoaded', () => {
+    useEffect(() => {
+        console.log('Component mounted, checking auth...');
+        console.log('JWT token:', localStorage.getItem('jwt_token'));
+
         // Manejar callback de Google Auth
         handleGoogleAuthCallback();
 
@@ -525,7 +529,7 @@ export default function Login() {
         if (!urlParams.get('google_auth')) {
             checkRememberToken();
         }
-    });
+    }, []);
 
     return (
         <>

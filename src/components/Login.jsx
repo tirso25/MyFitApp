@@ -420,19 +420,15 @@ export default function Login() {
         const rememberToken = urlParams.get('rememberToken');
 
         if (googleAuth === 'success' && token) {
-            // Login exitoso - guardar JWT
             localStorage.setItem('jwt_token', token);
 
-            // Si hay remember token, ya está en cookies automáticamente
             if (rememberToken) {
                 console.log('Remember me activated');
             }
 
-            // Decodificar el mensaje y mostrar
             const decodedMessage = message ? decodeURIComponent(message.replace(/\+/g, ' ')) : 'Login successful';
             showSuccessMessage(decodedMessage);
 
-            // Limpiar URL parameters
             const url = new URL(window.location);
             url.searchParams.delete('google_auth');
             url.searchParams.delete('token');
@@ -440,17 +436,14 @@ export default function Login() {
             url.searchParams.delete('rememberToken');
             window.history.replaceState({}, document.title, url);
 
-            // Redirigir al dashboard después de un momento
             setTimeout(() => {
-                navigate('/dashboard'); // Usar navigate de React Router en lugar de window.location.href
+                navigate('/dashboard');
             }, 1500);
 
         } else if (googleAuth === 'error') {
-            // Decodificar el mensaje de error y quitar los +
             const errorMessage = message ? decodeURIComponent(message.replace(/\+/g, ' ')) : 'Google authentication failed';
             showErrorMessage(errorMessage);
 
-            // Reactivar el botón de Google
             if (googleButtonRef.current) {
                 googleButtonRef.current.disabled = false;
                 googleButtonRef.current.innerHTML = `
@@ -459,7 +452,6 @@ export default function Login() {
             `;
             }
 
-            // Limpiar URL parameters
             const url = new URL(window.location);
             url.searchParams.delete('google_auth');
             url.searchParams.delete('message');
@@ -468,7 +460,6 @@ export default function Login() {
     };
 
     const checkRememberToken = async () => {
-        // Solo verificar si no hay JWT en localStorage y no hay parámetros de Google auth
         const urlParams = new URLSearchParams(window.location.search);
         const hasGoogleAuth = urlParams.get('google_auth');
 
@@ -476,7 +467,7 @@ export default function Login() {
             try {
                 const response = await fetch(`${API_BASE_URL}/api/users/tokenExisting`, {
                     method: 'POST',
-                    credentials: 'include', // Incluir cookies
+                    credentials: 'include',
                 });
 
                 const data = await response.json();
@@ -484,7 +475,6 @@ export default function Login() {
                 if (data.type === 'success' && data.userData) {
                     showSuccessMessage(data.message);
 
-                    // Redirigir al dashboard usando React Router
                     setTimeout(() => {
                         navigate('/dashboard');
                     }, 1500);
@@ -521,10 +511,8 @@ export default function Login() {
         console.log('Component mounted, checking auth...');
         console.log('JWT token:', localStorage.getItem('jwt_token'));
 
-        // Manejar callback de Google Auth
         handleGoogleAuthCallback();
 
-        // Verificar remember token solo si no hay callback de Google
         const urlParams = new URLSearchParams(window.location.search);
         if (!urlParams.get('google_auth')) {
             checkRememberToken();

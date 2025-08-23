@@ -538,18 +538,15 @@ export default function SignIn() {
         const rememberToken = urlParams.get('rememberToken');
 
         if (googleAuth === 'success' && token) {
-            // Login exitoso - guardar JWT
             localStorage.setItem('jwt_token', token);
 
             if (rememberToken) {
                 console.log('Remember me activated');
             }
 
-            // Decodificar el mensaje y mostrar
             const decodedMessage = message ? decodeURIComponent(message.replace(/\+/g, ' ')) : 'Login successful';
             showSuccessMessage(decodedMessage);
 
-            // Limpiar URL parameters
             const url = new URL(window.location);
             url.searchParams.delete('google_auth');
             url.searchParams.delete('token');
@@ -557,13 +554,11 @@ export default function SignIn() {
             url.searchParams.delete('rememberToken');
             window.history.replaceState({}, document.title, url);
 
-            // Redirigir al dashboard usando React Router
             setTimeout(() => {
                 navigate('/dashboard');
             }, 1500);
 
         } else if (googleAuth === 'error') {
-            // Decodificar el mensaje de error y quitar los +
             const errorMessage = message ? decodeURIComponent(message.replace(/\+/g, ' ')) : 'Google authentication failed';
             showErrorMessage(errorMessage);
 
@@ -575,7 +570,6 @@ export default function SignIn() {
             `;
             }
 
-            // Limpiar URL parameters
             const url = new URL(window.location);
             url.searchParams.delete('google_auth');
             url.searchParams.delete('message');
@@ -586,7 +580,6 @@ export default function SignIn() {
     useEffect(() => {
         console.log('SignIn component mounted, checking auth...');
 
-        // Manejar callback de Google Auth
         handleGoogleAuthCallback();
     }, []);
 

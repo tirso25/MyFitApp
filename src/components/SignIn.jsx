@@ -656,7 +656,7 @@ export default function SignIn() {
                             name="username"
                             placeholder="username"
                             required
-                            minLength="4"
+                            minLength="5"
                             maxLength="20"
                             autoComplete="username"
                             ref={usernameRef}

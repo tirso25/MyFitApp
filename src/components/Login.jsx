@@ -564,7 +564,7 @@ export default function Login() {
                             id="login_email"
                             placeholder="email@gmail.com/es or username"
                             required
-                            minLength="9"
+                            minLength="5"
                             maxLength="255"
                             autoComplete="emailorusername"
                             ref={emailRef}

@@ -36,6 +36,7 @@ export default function Login() {
     const isLoading = status === 'loading';
     const isSuccess = status === 'success';
     const isError = status === 'error';
+    const [showActivateAccount, setShowActivateAccount] = useState(false);
 
     useTTS(speakBtnRef, rulesContainerRef);
 
@@ -230,6 +231,10 @@ export default function Login() {
     const validateInput = (event) => {
         const target = event.target;
 
+        if (showActivateAccount) {
+            setShowActivateAccount(false);
+        }
+
         const isEmailValid = validateEmailOrUsername(emailRef.current.value);
         if (target === emailRef.current) {
             emailRuleRef.current.style.color = isEmailValid ? "green" : "#ff3c00";
@@ -314,6 +319,12 @@ export default function Login() {
                 }
                 setStatus('error');
 
+                if (response.status === 409) {
+                    setShowActivateAccount(true);
+                } else {
+                    setShowActivateAccount(false);
+                }
+
                 const notyf = new Notyf();
                 notyf.error({
                     message: message.message,
@@ -326,6 +337,7 @@ export default function Login() {
                 return;
             }
 
+            setShowActivateAccount(false);
             setStatus('success');
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
@@ -336,9 +348,15 @@ export default function Login() {
                 dismissible: true,
                 position: { x: 'right', y: 'top' },
             });
+
+            setTimeout(() => {
+                navigate('/AI');
+            }, 1500);
+
         } catch (error) {
             console.error("Error:", error);
             setStatus('error');
+            setShowActivateAccount(false);
 
             const notyf = new Notyf();
             notyf.error({
@@ -437,7 +455,7 @@ export default function Login() {
             window.history.replaceState({}, document.title, url);
 
             setTimeout(() => {
-                navigate('/dashboard');
+                navigate('/AI');
             }, 1500);
 
         } else if (googleAuth === 'error') {
@@ -476,7 +494,7 @@ export default function Login() {
                     showSuccessMessage(data.message);
 
                     setTimeout(() => {
-                        navigate('/dashboard');
+                        navigate('/AI');
                     }, 1500);
                 }
             } catch (error) {
@@ -596,7 +614,6 @@ export default function Login() {
                             <span className="counter-item">Digit: 0</span>
                             <span className="counter-item">Special: 0</span>
                         </div>
-
                         <div className="options-container">
                             <div className="checkbox-container">
                                 <input
@@ -608,13 +625,24 @@ export default function Login() {
                                 <label htmlFor="rememberme" className="cbx"></label>
                                 <label htmlFor="rememberme">Remember Me</label>
                             </div>
-                            <a
-                                href="/checkEmail?type=changePassword"
-                                className="forgot-password"
-                                id="forgotPasswordLink"
-                            >
-                                Forgot Password?
-                            </a>
+                            <div className="help-links">
+                                <a
+                                    href="/checkEmail?type=changePassword"
+                                    className="forgot-password"
+                                    id="forgotPasswordLink"
+                                >
+                                    Forgot Password?
+                                </a>
+                                {showActivateAccount && (
+                                    <a
+                                        href="/checkEmail?type=activateAccount"
+                                        className="activate-account"
+                                        id="activateAccountLink"
+                                    >
+                                        Activate Account
+                                    </a>
+                                )}
+                            </div>
                         </div>
                     </div>
                     <div id="content2">

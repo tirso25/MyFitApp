@@ -429,38 +429,80 @@ export default function Login() {
         window.location.href = `${API_BASE_URL}/api/connect/google?source=login`;
     };
 
-    const handleGoogleAuthCallback = () => {
+    const handleGoogleAuthCallback = async () => {
         const urlParams = new URLSearchParams(window.location.search);
-        const googleAuth = urlParams.get('google_auth');
-        console.log('Google auth status:', googleAuth);
-        const token = urlParams.get('token');
-        const message = urlParams.get('message');
-        const rememberToken = urlParams.get('rememberToken');
+        const code = urlParams.get('code');
 
-        if (googleAuth === 'success' && token) {
-            localStorage.setItem('jwt_token', token);
+        if (!code) {
+            return;
+        }
 
-            if (rememberToken) {
-                console.log('Remember me activated');
+        console.log('Processing Google OAuth code...');
+
+        try {
+            if (googleButtonRef.current) {
+                googleButtonRef.current.disabled = true;
+                googleButtonRef.current.innerHTML = `
+                <div class="loading-spinner"></div>
+                Processing...
+            `;
             }
 
-            const decodedMessage = message ? decodeURIComponent(message.replace(/\+/g, ' ')) : 'Login successful';
-            showSuccessMessage(decodedMessage);
+            const response = await fetch(`${API_BASE_URL}/api/connect/google/callback`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    code: code,
+                    rememberme: rememberMeRef.current?.checked || false
+                })
+            });
+
+            const data = await response.json();
 
             const url = new URL(window.location);
-            url.searchParams.delete('google_auth');
-            url.searchParams.delete('token');
-            url.searchParams.delete('message');
-            url.searchParams.delete('rememberToken');
+            url.searchParams.delete('code');
+            url.searchParams.delete('state');
+            url.searchParams.delete('scope');
+            url.searchParams.delete('authuser');
+            url.searchParams.delete('prompt');
             window.history.replaceState({}, document.title, url);
 
-            setTimeout(() => {
-                navigate('/AI');
-            }, 1500);
+            if (data.type === 'success') {
+                localStorage.setItem('jwt_token', data.token);
 
-        } else if (googleAuth === 'error') {
-            const errorMessage = message ? decodeURIComponent(message.replace(/\+/g, ' ')) : 'Google authentication failed';
-            showErrorMessage(errorMessage);
+                if (data.rememberToken) {
+                    console.log('Remember me activated');
+                }
+
+                showSuccessMessage(data.message);
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+
+                setTimeout(() => {
+                    navigate('/AI');
+                }, 1500);
+
+            } else if (data.requiresPassword) {
+                showSuccessMessage(data.message);
+
+                setTimeout(() => {
+                    navigate(`/checkEmail?email=${data.encryptedEmail.email}&key=${data.encryptedEmail.key}&type=changePassword`);
+                }, 1500);
+
+            } else {
+                showErrorMessage(data.message || 'Google authentication failed');
+
+                if (googleButtonRef.current) {
+                    googleButtonRef.current.disabled = false;
+                    googleButtonRef.current.innerHTML = `
+                    <img src="/img/google-icon.svg" alt="Google" width="20" height="20">
+                    Log in with Google
+                `;
+                }
+            }
+
+        } catch (error) {
+            console.error('Google auth error:', error);
+            showErrorMessage('A network error occurred during Google authentication.');
 
             if (googleButtonRef.current) {
                 googleButtonRef.current.disabled = false;
@@ -469,11 +511,6 @@ export default function Login() {
                 Log in with Google
             `;
             }
-
-            const url = new URL(window.location);
-            url.searchParams.delete('google_auth');
-            url.searchParams.delete('message');
-            window.history.replaceState({}, document.title, url);
         }
     };
 
@@ -529,14 +566,15 @@ export default function Login() {
         console.log('Component mounted, checking auth...');
         console.log('JWT token:', localStorage.getItem('jwt_token'));
 
-        handleGoogleAuthCallback();
-
         const urlParams = new URLSearchParams(window.location.search);
-        if (!urlParams.get('google_auth')) {
+        const hasCode = urlParams.get('code');
+
+        if (hasCode) {
+            handleGoogleAuthCallback();
+        } else if (!localStorage.getItem('jwt_token')) {
             checkRememberToken();
         }
     }, []);
-
     return (
         <>
             <fieldset>
